@@ -84,11 +84,13 @@ const Products = () => {
 
     return (
         <div className="products-container">
-            <h2 className="products-title">Data from API:</h2>
+            {/*<h2 className="products-title">Data from API:</h2>*/}
+            <h3>Search products</h3>
             <input value = {inputValue}
                    type = "text"
                    onChange = {(e) => setInputValue(e.target.value)}
-            /><h3>Search products</h3>
+                   className="products-input"
+            />
 
             {filteredData && filteredData.length > 0 ? (
                 <div className="products-grid">

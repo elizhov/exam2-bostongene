@@ -136,3 +136,10 @@ body.dark{
 .reset-cart-button:active {
   background-color: #b71c1c;
 }
+.products-input{
+  margin-bottom: 10px;
+  background-color: #18212a;
+  width: 40%;
+  /*height: 40px;*/
+  border-radius: 5px;
+}
