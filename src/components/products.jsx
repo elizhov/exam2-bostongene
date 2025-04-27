@@ -7,6 +7,7 @@ import Cart from "./cart.jsx";
 const Products = () => {
     const [data, setData] = useState([]);
     const [cart, setCart] = useState([]);
+    const [inputValue, setInputValue] = useState("");
     const prevCart = useRef([]);
 
     useEffect(() => {
@@ -21,6 +22,10 @@ const Products = () => {
 
         getData();
     }, []);
+
+    const filteredData = data.filter((item) =>
+        item.title.toLowerCase().includes(inputValue.toLowerCase())
+    );
 
     const updatePrevCart = () => {
         prevCart.current = [...cart];
@@ -80,9 +85,14 @@ const Products = () => {
     return (
         <div className="products-container">
             <h2 className="products-title">Data from API:</h2>
-            {data && data.length > 0 ? (
+            <input value = {inputValue}
+                   type = "text"
+                   onChange = {(e) => setInputValue(e.target.value)}
+            /><h3>Search products</h3>
+
+            {filteredData && filteredData.length > 0 ? (
                 <div className="products-grid">
-                    {data.map((item) => (
+                    {filteredData.map((item) => (
                         <Product
                             key={item.id}
                             {...item}
