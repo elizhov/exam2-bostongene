@@ -1,5 +1,5 @@
-import "../App.css"
-import { useEffect, useState } from "react";
+import "../App.css";
+import { useEffect, useState, useRef } from "react";
 import fetchData from "../api/api.js";
 import Product from "./product.jsx";
 import Cart from "./cart.jsx";
@@ -7,6 +7,7 @@ import Cart from "./cart.jsx";
 const Products = () => {
     const [data, setData] = useState([]);
     const [cart, setCart] = useState([]);
+    const prevCart = useRef([]);
 
     useEffect(() => {
         const getData = async () => {
@@ -21,38 +22,48 @@ const Products = () => {
         getData();
     }, []);
 
-    // const addToCart = (product) => {
-    //     setCart((prevCart) => [...prevCart, product]);
-    // };
+    const updatePrevCart = () => {
+        prevCart.current = [...cart];
+    };
+
+    const resetCart = () => {
+        setCart([...prevCart.current]);
+    };
 
     const addToCart = (product) => {
-        setCart((prevCart) => {
-            const existingItem = prevCart.find((item) => item.id === product.id);
+        updatePrevCart();
+
+        setCart((prevCartState) => {
+            const existingItem = prevCartState.find((item) => item.id === product.id);
             if (existingItem) {
-                return prevCart.map((item) =>
+                return prevCartState.map((item) =>
                     item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
                 );
             } else {
-                return [...prevCart, { ...product, quantity: 1 }];
+                return [...prevCartState, { ...product, quantity: 1 }];
             }
         });
     };
 
     const increaseQuantity = (id) => {
-        setCart((prevCart) =>
-            prevCart.map((item) =>
+        updatePrevCart();
+
+        setCart((prevCartState) =>
+            prevCartState.map((item) =>
                 item.id === id ? { ...item, quantity: item.quantity + 1 } : item
             )
         );
     };
 
     const decreaseQuantity = (id) => {
-        setCart((prevCart) =>
-            prevCart
+        updatePrevCart();
+
+        setCart((prevCartState) =>
+            prevCartState
                 .map((item) =>
                     item.id === id ? { ...item, quantity: item.quantity - 1 } : item
                 )
-                .filter((item) => item.quantity > 0) //henc 0 a hani
+                .filter((item) => item.quantity > 0) //henc 0 a jnji
         );
     };
 
@@ -60,12 +71,11 @@ const Products = () => {
         return cart.reduce((curr, item) => curr + item.price * item.quantity, 0);
     };
 
-
     const removeFromCart = (id) => {
-        setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-    };
+        updatePrevCart();
 
-    console.log(cart);
+        setCart((prevCartState) => prevCartState.filter((item) => item.id !== id));
+    };
 
     return (
         <div className="products-container">
@@ -83,15 +93,16 @@ const Products = () => {
             ) : (
                 <p>No data available.</p>
             )}
-                <Cart
-                    cartItems={cart}
-                    removeFromCart={removeFromCart}
-                    increaseQuantity={increaseQuantity}
-                    decreaseQuantity={decreaseQuantity}
-                    getTotalPrice={getTotalPrice}
-                />
+            <Cart
+                cartItems={cart}
+                removeFromCart={removeFromCart}
+                increaseQuantity={increaseQuantity}
+                decreaseQuantity={decreaseQuantity}
+                getTotalPrice={getTotalPrice}
+            />
+            <button onClick={resetCart} className="reset-cart-button">Reset Cart</button>
         </div>
     );
-}
+};
 
 export default Products;

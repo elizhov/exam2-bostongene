@@ -118,3 +118,21 @@ body.dark{
   color: #777;
 }
 
+.reset-cart-button {
+  margin-top: 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.reset-cart-button:hover {
+  background-color: #d32f2f;
+}
+
+.reset-cart-button:active {
+  background-color: #b71c1c;
+}
